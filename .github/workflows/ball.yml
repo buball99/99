@@ -1,24 +1,26 @@
-name: Flight Scraper
+name: Sharjah Flight Scraper
 
 on:
+  workflow_dispatch:    # manual trigger
   schedule:
-    - cron: '*/1 * * * *'  # every 1 minute
+    - cron: '*/1 * * * *'  # every minute
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    - name: Install dependencies
-      run: npm install puppeteer
+      - name: Install dependencies
+        run: npm install
 
-    - name: Run scraper
-      run: node dihh.js
+      - name: Run scraper
+        run: node dihh.js
+
