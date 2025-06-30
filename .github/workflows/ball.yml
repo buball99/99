@@ -1,0 +1,22 @@
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Chrome browser
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install dependencies
+        run: npm install puppeteer
+
+      - name: Run scraper
+        env:
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+        run: node dihh.js
