@@ -1,25 +1,25 @@
-name: Scrape Sharjah Departures
+name: Run scraper
 
 on:
   schedule:
-    - cron: "*/5 * * * *"  # every 5 minutes
-  workflow_dispatch:       # allows manual trigger
+    - cron: '*/30 * * * *'   # runs every 30 minutes
+  workflow_dispatch:         # also allows manual run
 
 jobs:
-  run-scraper:
+  scrape:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
 
-      - name: Install Puppeteer
-        run: npm install puppeteer
+    - name: Install dependencies
+      run: npm install puppeteer
 
-      - name: Run scraper
-        run: node scrape.js
+    - name: Run scraper
+      run: node dihh.js
+
