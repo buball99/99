@@ -1,26 +1,30 @@
-name: Sharjah Flight Scraper
+name: Scrape Sharjah Airport
 
 on:
-  workflow_dispatch:    # manual trigger
   schedule:
-    - cron: '*/1 * * * *'  # every minute
+    - cron: '*/1 * * * *'  # Runs every 1 minute
+  workflow_dispatch:        # Allows manual triggering from GitHub UI
 
 jobs:
-  scrape:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
       - name: Install dependencies
-        run: npm install
+        run: npm install puppeteer
 
       - name: Run scraper
         run: node dihh.js
+        env:
+          PUPPETEER_EXECUTABLE_PATH: ''
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+
 
