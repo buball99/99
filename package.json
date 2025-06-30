@@ -1,12 +1,13 @@
 {
-  "name": "sharjah-flight-scraper",
+  "name": "sharjah-scraper",
   "version": "1.0.0",
-  "description": "Scraper for Sharjah Airport flight data",
+  "description": "Scrape Sharjah Airport flights",
   "main": "dihh.js",
   "scripts": {
     "start": "node dihh.js"
   },
   "dependencies": {
-    "puppeteer": "^20.7.4"
+    "puppeteer": "^22.8.2"
   }
 }
+
