@@ -1,19 +1,23 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
+  try {
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
 
-  await page.goto('https://www.sharjahairport.ae/en/traveller/flight-information/passenger-departures/', {
-    waitUntil: 'networkidle2'
-  });
+    const page = await browser.newPage();
 
-  await page.waitForSelector('.flight-item-detail');
+    // Go to Sharjah departures page
+    await page.goto('https://www.sharjahairport.ae/en/traveller/flight-information/passenger-departures/', { waitUntil: 'networkidle2' });
 
-  const flights = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll('.flight-item-detail'))
-      .filter(div => div.getAttribute('data-status') !== 'departed')
-      .map(div => ({
+    // Wait for flight blocks to load
+    await page.waitForSelector('.flight-item-detail');
+
+    // Extract flight data
+    const flights = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll('.flight-item-detail')).map(div => ({
         airline: div.getAttribute('data-airline'),
         flight: div.getAttribute('data-flight'),
         origin: div.getAttribute('data-origin'),
@@ -21,9 +25,18 @@ const puppeteer = require('puppeteer');
         gate: div.querySelector('.flight_belt')?.innerText.trim() || 'No gate info',
         statusNote: div.querySelector('.status-note')?.innerText.trim() || 'No status note'
       }));
-  });
+    });
 
-  console.log(flights);
-  await browser.close();
+    // Filter only scheduled or on ground flights
+    const filteredFlights = flights.filter(flight =>
+      flight.status === 'scheduled' || flight.status === 'on ground'
+    );
+
+    console.log(filteredFlights);
+
+    await browser.close();
+  } catch (error) {
+    console.error('Error scraping Sharjah airport:', error);
+    process.exit(1);
+  }
 })();
-
